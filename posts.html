@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>글 목록 (1/2) · t3b04-ds-night-rv-2</title>
+  <meta name="description" content="t3b04-ds-night-rv-2에 올라온 글 목록입니다.">
+  <link rel="canonical" href="https://dangsan-guide-night.hardcoreroom.com/posts.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+ /* ===== RESET & BASE ===== */
+ *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+ html { font-size: 16px; scroll-behavior: smooth; }
+ body {
+ font-family: 'Pretendard', 'Malgun Gothic', sans-serif;
+ background: #0a0a0a;
+ color: #e0e0e0;
+ line-height: 1.7;
+ min-height: 100vh;
+ overflow-x: hidden;
+ }
+ img, svg { max-width: 100%; display: block; }
+ a { color: #ff4d4d; text-decoration: none; border-bottom: 1px solid transparent; transition: 0.2s; }
+ a:hover { color: #ff8080; border-bottom-color: #ff4d4d; }
+ ul, ol { list-style: none; }
+
+ /* ===== DESIGN TOKENS ===== */
+ :root {
+ --bg-primary: #0a0a0a;
+ --bg-secondary: #141414;
+ --bg-card: #1a1a1a;
+ --text-primary: #f0f0f0;
+ --text-secondary: #b0b0b0;
+ --accent: #ff4d4d;
+ --accent-glow: rgba(255, 77, 77, 0.15);
+ --border-color: #2a2a2a;
+ --border-accent: #ff4d4d;
+ --font-size-sm: 0.875rem;
+ --font-size-base: 1rem;
+ --font-size-lg: 1.25rem;
+ --font-size-xl: 1.75rem;
+ --font-size-2xl: 2.5rem;
+ --spacing-xs: 0.5rem;
+ --spacing-sm: 1rem;
+ --spacing-md: 2rem;
+ --spacing-lg: 3rem;
+ --spacing-xl: 5rem;
+ --radius-sm: 4px;
+ --radius-md: 8px;
+ --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+ --shadow-glow: 0 0 20px rgba(255,77,77,0.15);
+ }
+
+ /* ===== LAYOUT ===== */
+ body > * { padding: 0 var(--spacing-md); max-width: 1200px; margin-left: auto; margin-right: auto; }
+ .wrapper { width: 100%; max-width: 1000px; margin: 0 auto; }
+
+ /* ===== HEADER ===== */
+ header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: var(--spacing-sm) var(--spacing-md);
+ border-bottom: 2px solid var(--border-accent);
+ background: var(--bg-secondary);
+ box-shadow: var(--shadow-glow);
+ position: sticky;
+ top: 0;
+ z-index: 100;
+ max-width: 100%;
+ }
+ header h1 {
+ font-size: var(--font-size-xl);
+ font-weight: 800;
+ letter-spacing: -0.02em;
+ color: var(--accent);
+ text-transform: uppercase;
+ text-shadow: 0 0 8px var(--accent-glow);
+ }
+ header h1 a { color: inherit; border: none; }
+ header h1 a:hover { color: #ff8080; }
+
+ /* ===== NAV ===== */
+ nav { display: flex; align-items: center; gap: var(--spacing-sm); }
+ nav a {
+ font-size: var(--font-size-sm);
+ font-weight: 600;
+ text-transform: uppercase;
+ letter-spacing: 0.08em;
+ color: var(--text-secondary);
+ border-bottom: 2px solid transparent;
+ padding-bottom: 2px;
+ transition: 0.2s;
+ }
+ nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+ nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+ /* 햄버거 버튼 (모바일) */
+ .hamburger { display: none; flex-direction: column; cursor: pointer; gap: 5px; background: none; border: none; padding: 4px; }
+ .hamburger span { width: 28px; height: 3px; background: var(--accent); border-radius: 2px; transition: 0.3s; }
+
+ /* ===== HERO ===== */
+ .hero {
+ text-align: center;
+ padding: var(--spacing-xl) 0 var(--spacing-lg);
+ position: relative;
+ }
+ .hero::after {
+ content: '';
+ position: absolute;
+ bottom: 0;
+ left: 10%;
+ width: 80%;
+ height: 1px;
+ background: linear-gradient(90deg, transparent, var(--accent), transparent);
+ }
+ .hero h2 {
+ font-size: var(--font-size-2xl);
+ font-weight: 800;
+ color: var(--text-primary);
+ line-height: 1.2;
+ margin-bottom: var(--spacing-sm);
+ text-shadow: 0 0 12px var(--accent-glow);
+ }
+ .hero p {
+ font-size: var(--font-size-lg);
+ color: var(--text-secondary);
+ max-width: 640px;
+ margin: 0 auto var(--spacing-md);
+ }
+ .hero .tel-highlight {
+ display: inline-block;
+ font-size: var(--font-size-xl);
+ font-weight: 700;
+ color: var(--accent);
+ background: rgba(255, 77, 77, 0.08);
+ padding: var(--spacing-xs) var(--spacing-md);
+ border-radius: var(--radius-sm);
+ border: 1px solid var(--border-accent);
+ margin-top: var(--spacing-sm);
+ }
+
+ /* ===== CARDS ===== */
+ .card-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+ gap: var(--spacing-md);
+ padding: var(--spacing-lg) 0;
+ }
+ .card {
+ background: var(--bg-card);
+ border: 1px solid var(--border-color);
+ border-radius: var(--radius-md);
+ padding: var(--spacing-md);
+ box-shadow: var(--shadow-sm);
+ transition: 0.3s;
+ }
+ .card:hover { border-color: var(--accent); box-shadow: var(--shadow-glow); transform: translateY(-2px); }
+ .card h3 { font-size: var(--font-size-lg); color: var(--accent); margin-bottom: var(--spacing-xs); }
+ .card p { font-size: var(--font-size-base); color: var(--text-secondary); margin-bottom: var(--spacing-xs); }
+ .card .badge {
+ display: inline-block;
+ background: var(--accent);
+ color: #000;
+ font-size: 0.75rem;
+ font-weight: 700;
+ padding: 2px 8px;
+ border-radius: 2px;
+ text-transform: uppercase;
+ letter-spacing: 0.05em;
+ }
+
+ /* ===== FAQ ===== */
+ .faq-section { padding: var(--spacing-lg) 0; }
+ .faq-section h2 {
+ font-size: var(--font-size-2xl);
+ font-weight: 800;
+ color: var(--accent);
+ margin-bottom: var(--spacing-md);
+ text-align: center;
+ text-shadow: 0 0 8px var(--accent-glow);
+ }
+ .faq-item {
+ border-bottom: 1px solid var(--border-color);
+ padding: var(--spacing-sm) 0;
+ }
+ .faq-item:last-child { border-bottom: none; }
+ .faq-item h3 {
+ font-size: var(--font-size-base);
+ font-weight: 700;
+ color: var(--text-primary);
+ cursor: pointer;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ user-select: none;
+ }
+ .faq-item h3:hover { color: var(--accent); }
+ .faq-item h3::after {
+ content: '▾';
+ color: var(--accent);
+ font-size: 1.2em;
+ transition: 0.2s;
+ }
+ .faq-item h3.open::after { transform: rotate(180deg); }
+ .faq-item p {
+ padding-top: var(--spacing-xs);
+ color: var(--text-secondary);
+ font-size: var(--font-size-base);
+ display: none;
+ }
+ .faq-item p.open { display: block; }
+
+ /* ===== FOOTER ===== */
+ footer {
+ text-align: center;
+ padding: var(--spacing-lg) 0 var(--spacing-md);
+ border-top: 1px solid var(--border-color);
+ color: var(--text-secondary);
+ font-size: var(--font-size-sm);
+ }
+ footer a { color: var(--accent); border: none; }
+
+ /* ===== 반응형 ===== */
+ @media (max-width: 768px) {
+ header { padding: var(--spacing-xs) var(--spacing-sm); }
+ header h1 { font-size: var(--font-size-lg); }
+ nav {
+ display: none;
+ flex-direction: column;
+ background: var(--bg-secondary);
+ position: absolute;
+ top: 100%;
+ left: 0;
+ width: 100%;
+ padding: var(--spacing-sm);
+ border-bottom: 2px solid var(--accent);
+ gap: var(--spacing-xs);
+ }
+ nav.open { display: flex; }
+ .hamburger { display: flex; }
+ .hero { padding: var(--spacing-lg) 0 var(--spacing-md); }
+ .hero h2 { font-size: var(--font-size-xl); }
+ .hero .tel-highlight { font-size: var(--font-size-lg); }
+ .card-grid { grid-template-columns: 1fr; padding: var(--spacing-md) 0; }
+ .faq-section h2 { font-size: var(--font-size-xl); }
+ body > * { padding: 0 var(--spacing-sm); }
+ }
+
+ /* ===== JS 간단 토글 (인라인) ===== */
+ .faq-item h3 { cursor: pointer; }
+ </style>
+  <meta property="og:title" content="글 목록 (1/2) · t3b04-ds-night-rv-2">
+  <meta property="og:description" content="t3b04-ds-night-rv-2에 올라온 글 목록입니다.">
+  <meta property="og:url" content="https://dangsan-guide-night.hardcoreroom.com/posts.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+</head>
+<body>
+  <div class="container">
+    <header>
+ <h1><a href="/">당산 유흥 후기</a></h1>
+ <nav id="mainNav">
+ <a href="index.html">홈</a>
+ <a href="review.html">후기</a>
+ <a href="info.html" class="active">정보</a>
+ <a href="tip.html">꿀팁</a>
+ <a href="map.html">지도</a>
+ </nav>
+ <button class="hamburger" id="hamburgerBtn" aria-label="메뉴 열기">
+ 
+ </button>
+ </header>
+    <main>
+      <h1>글 목록</h1>
+      <p>전체 39개 · 1/2 페이지</p>
+      <ul class="post-list">
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0460.html">당산 유흥 후기 속 마사지 업체를 고르는 기준은 무엇인가요</a>
+        <p class="post-item__summary">여러분은 지친 몸을 이끌고 마사지 샵을 고를 때 어떤 기준을 가장 중요하게 생각하시나요. 가끔 당산 유흥 후기 게시판을 통해 정보를 얻으려 노력하지만, 정작 동대문 지역의 마사지 샵을 비교할 때는 </p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0461.html">당산 유흥 후기 신뢰도를 분석하는 마포 합정 인디 소셜 라운지 가이드</a>
+        <p class="post-item__summary">온라인에 넘쳐나는 당산 유흥 후기 중에서 실제 정보성 글을 골라내는 것은 매우 까다로운 작업입니다. 단순히 광고성 문구로 도배된 게시물보다는 현장의 분위기와 소규모 모임의 성격을 제대로 전달하는 곳</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0462.html">당산 유흥 후기 속 가짜 정보를 거르는 원문 보기</a>
+        <p class="post-item__summary">검색 엔진 결과에서 당산 유흥 후기 키워드를 검색하면 수많은 광고성 글이 노출되어 피로감을 줍니다. 디지털 공간에서도 건강한 콘텐츠가 유지되려면 정교한 링크 구조와 지수 관리가 핵심적인 역할을 합니</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0463.html">당산 유흥 후기 작성 시 주의할 해당 사이트</a>
+        <p class="post-item__summary">많은 작성자가 당산 유흥 후기 정보를 올릴 때 가장 흔히 범하는 실수는 바로 콘텐츠의 맥락과 동떨어진 홍보 문구 삽입입니다. 이는 검색 엔진이 신뢰도를 하락시키는 주된 요인이 되며, 독자들에게도 즉</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0464.html">당산 유흥 후기 현장보다 실속 있는 마포 럭셔리 단체 가라오케 예약 가이드</a>
+        <p class="post-item__summary">단체 모임을 준비하다 보면 당산 유흥 후기 게시판에 올라온 정보들에 혼란을 느끼기 쉽습니다. 특히 VIP 단체 모임을 기획하는 주최자에게는 검증된 장소의 정보가 무엇보다 중요합니다. 위치와 접근성을</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0465.html">당산 유흥 후기 바탕으로 살펴본 마포 유흥 투명 정찰제 가격 정보 디렉토리의 가치</a>
+        <p class="post-item__summary">처음 방문하는 지역에서 업소를 찾을 때 흔히 접하는 당산 유흥 후기 정보들은 종종 모호한 가격 설정으로 인해 혼란을 가중합니다. 특히 가격이 사전에 고지되지 않아 현장에서 예기치 못한 추가 비용이 </p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0466.html">당산 유흥 후기 이후 분석하는 마포 코인노래방 방음 시설 비교 가이드 활용법</a>
+        <p class="post-item__summary">많은 이들이 코인노래방은 단순히 저렴하게 노래를 부르는 공간이라고 오해하곤 합니다. 하지만 당산 유흥 후기 사례를 보면, 환경에 따라 소음 차단 수준이 극명하게 갈린다는 사실을 깨닫게 됩니다. 실질</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0467.html">당산 유흥 후기 데이터를 활용한 구글 알고리즘 감점 치료 및 백링크 수술실 운영 분석</a>
+        <p class="post-item__summary">디지털 환경에서 웹사이트가 검색 상단에 위치하기 위해서는 복합적인 조건이 충족되어야 합니다. 당산 유흥 후기 콘텐츠를 작성할 때도 검색엔진의 규칙을 준수하는 것이 노출에 핵심적입니다. 잘못된 링크 </p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0468.html">당산 유흥 후기 전략을 넘어서는 4</a>
+        <p class="post-item__summary">반복적인 일상 업무에서 벗어나 스스로 돌아가는 자동화 시스템을 꿈꿔본 적 있으신가요? 당산 유흥 후기 관리와 같이 단순한 데이터 기록을 넘어, 더 큰 비즈니스 마케팅을 자동화하려는 움직임이 활발합니</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0469.html">당산 유흥 후기 활용을 위한 마포 셔츠룸 리얼 후기 소셜 마케팅 가이드 전략</a>
+        <p class="post-item__summary">온라인상에 퍼진 당산 유흥 후기 데이터는 정보의 홍수 속에서 진실을 가려내야 하는 어려운 과제를 남깁니다. 특히 특정 유흥 업종에 대한 평가는 주관적인 요소가 강하게 개입되어 있어 맹목적으로 신뢰하</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0470.html">당산 유흥 후기 기반 구글 틈새 키워드 트래픽 외환 거래 전략과 투자 가이드</a>
+        <p class="post-item__summary">인터넷 커뮤니티에 올라온 당산 유흥 후기 데이터는 단순한 정보를 넘어 트래픽의 흐름을 읽는 중요한 지표가 되기도 합니다. 이러한 데이터를 분석하여 수익을 창출하는 영역은 최근 디지털 재테크의 한 방</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0471.html">당산 유흥 후기 확인 전 마포 셔츠룸 예약 시 눈탱이 피하는 법 완벽 정리</a>
+        <p class="post-item__summary">많은 이들이 당산 유흥 후기 내용을 맹신하여 현장을 방문했다가 예상치 못한 비용을 청구받는 경우가 빈번합니다. 대부분의 실패는 사전에 가격 구조와 예약 프로세스를 제대로 확인하지 않은 채 서둘러 결</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0472.html">당산 유흥 후기 사이트 운영자를 위한 구글 봇 정밀 검진 및 크롤 버짓 밀착 간호</a>
+        <p class="post-item__summary">당산 유흥 후기 정보를 제공하는 플랫폼은 검색 엔진 최적화 없이는 사실상 존재 가치를 입증하기 어렵습니다. 특히 구글 봇이 웹사이트를 얼마나 효율적으로 탐색하고 있는지 체크하는 것은 운영자에게 필수</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0473.html">당산 유흥 후기 초행자를 위한 셔츠룸 사이트 이용 핵심 전략</a>
+        <p class="post-item__summary">오랜만에 동료들과 당산 유흥 후기 정보를 찾아보던 직장인 A씨는 셔츠룸이라는 생소한 용어에 당혹감을 느꼈습니다. 단순히 분위기 좋은 술집을 찾으려던 계획이었으나 시스템과 운영 방식을 명확히 파악하지</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0474.html">당산 유흥 후기 확인하고 마포 홍대 단체 가라오케 예약 가이드</a>
+        <p class="post-item__summary">많은 이들이 가라오케 방문은 무조건 밤늦은 시간에 가야 한다고 생각하지만 이는 큰 오해입니다. 당산 유흥 후기 데이터를 분석해보면 이른 저녁 시간대에도 충분히 쾌적하게 즐길 수 있는 환경이 조성되어</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0475.html">당산 유흥 후기 검색 분석과 구글 인덱싱 속도 초고속 광회선 대역폭 최적화 기술</a>
+        <p class="post-item__summary">최적의 서버 성능, 네트워크 안정성, 그리고 충분한 하드웨어 리소스라는 세 가지 충족 조건이 갖춰져야 데이터 처리 효율이 극대화됩니다. 당산 유흥 후기 관련 정보를 검색할 때도 통신망의 상태가 결과</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260719-0476.html">당산 유흥 후기 확인 전 알아야 할 구글 신뢰 지수 모발이식 솔루션의 중요성</a>
+        <p class="post-item__summary">여러분은 온라인에서 정보를 검색할 때 어떤 기준으로 업체를 신뢰하십니까? 당산 유흥 후기 정보를 찾는 과정에서도 해당 웹사이트가 얼마나 공신력 있는 데이터로 구성되었는지 판단하는 눈이 필요합니다. </p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260721-0257.html">당산 유흥 후기 참고하여 마포 단체 회식용 대형 룸 노래방 가격 정보 확인하기</a>
+        <p class="post-item__summary">직장 동료들과 함께 갑작스럽게 장소를 섭외해야 하는 상황이 발생하면 막막함을 느끼기 마련입니다. 당산 유흥 후기 내용을 살피다 보면 많은 이들이 장소의 규모와 접근성을 가장 중요한 요소로 꼽는다는 </p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260721-0258.html">당산 유흥 후기 기반 셔츠룸 예약 시 고려할 시간대별 팁</a>
+        <p class="post-item__summary">많은 이들이 오해하는 부분 중 하나는 특정 유흥 업종이 언제나 일정한 서비스를 제공할 것이라는 생각입니다. 당산 유흥 후기 글들을 자세히 분석해보면 시간대에 따라 서비스의 질과 예약 가능 여부가 확</p>
+      </li>
+      <li class="post-item">
+        <a class="post-item__link" href="posts/gemini-coverage-20260721-0259.html">당산 유흥 후기 및 마포 홍대 로컬 럭셔리 밤문화 가이드 활용법</a>
+        <p class="post-item__summary">어떤 장소를 방문하든 가장 먼저 고려해야 할 요소는 함께할 인원과 그에 적합한 공간의 크기입니다. 당산 유흥 후기 사례를 보면, 인원 구성이 적절하지 않을 경우 분위기가 반감되는 경우가 많습니다. </p>
+      </li>
+      </ul>
+    <nav class="pager">
+      <span class="pager__current">1</span>
+      <a class="pager__link" href="posts-2.html">2</a>
+    </nav>
+    </main>
+  </div>
+</body>
+</html>
